@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heads and Tails</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            text-align: center;
+            padding: 50px;
+        }
+
+        button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button.reset {
+            background-color: #dc3545;
+        }
+
+        button.reset:hover {
+            background-color: #a71d2a;
+        }
+
+        p.finalresult {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        p.pic {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        p.finalscore {
+            font-size: 20px;
+            color: #555;
+            margin-top: 20px;
+        }
+
+        img {
+            height: 50px;
+            width: 50px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+
+   <button onclick="status('heads')">Head</button>
+   <button onclick="status('tails')">Tail</button>
+
+   <p class="me"></p>
+   <p class="finalresult">Final result</p>
+   <p class="pic"></p>
+
+   <p class="finalscore">Score will be displayed here</p>
+
+   <button class="reset" onclick="
+      score.wins = 0;
+      score.losses = 0;
+      localStorage.removeItem('score');
+      update();">Reset Score</button>
+
+   <script>
+   let score = JSON.parse(localStorage.getItem('score')) || {
+      wins: 0,
+      losses: 0
+   }
+
+   function status(choice) {
+      const computerPick = computerMove();
+
+      let result = '';
+
+      if (choice === computerPick) {
+         result = 'win';
+         score.wins++;
+      } else {
+         result = 'lost';
+         score.losses++;
+      }
+
+      document.querySelector('.finalresult').innerHTML = `${result}`;
+      document.querySelector('.pic').innerHTML = `You - <img src="${choice}.png"/> and Computer - <img src="${computerPick}.png" />`;
+
+      update();
+   }
+
+   function computerMove() {
+      let computerPick = '';
+      let num = Math.random();
+
+      if (num >= 0 && num < 1/2) {
+         computerPick = 'heads';
+      } else {
+         computerPick = 'tails';
+      }
+      return computerPick;
+   }
+
+   function update() {
+      document.querySelector('.finalscore').innerHTML = `Wins: ${score.wins} Losses: ${score.losses}`;
+      localStorage.setItem('score', JSON.stringify(score));
+   }
+
+   update();
+   </script>
+</body>
+</html>
